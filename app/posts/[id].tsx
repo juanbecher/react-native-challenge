@@ -1,4 +1,8 @@
 import { fetchPostById } from "@/src/api/post";
+import FavoriteButton from "@/src/components/ui/FavoriteButton";
+import { Config } from "@/src/constants/Config";
+import { useFavorites } from "@/src/context/FavoritesContext";
+import { formatDate } from "@/src/utils/date";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
@@ -8,6 +12,8 @@ export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const postId = parseInt(id || "0", 10);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const favorite = isFavorite(postId);
 
   const {
     data: post,
@@ -61,21 +67,37 @@ export default function PostDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      edges={["bottom", "left", "right"]}
+    >
       <ScrollView style={{ flex: 1 }}>
         <View style={{ padding: 16 }}>
-          <Image
-            source={{
-              uri: `https://picsum.photos/seed/${post.id}/800/400`,
-            }}
-            style={{
-              width: "100%",
-              height: 250,
-              borderRadius: 8,
-              marginBottom: 16,
-            }}
-            resizeMode="cover"
-          />
+          <View style={{ marginBottom: 16 }}>
+            <Image
+              source={{
+                uri: `${Config.IMAGE_BASE_URL}/${post.id}/800/400`,
+              }}
+              style={{
+                width: "100%",
+                height: 250,
+                borderRadius: 8,
+              }}
+              resizeMode="cover"
+            />
+            <FavoriteButton
+              isFavorite={favorite}
+              onPress={() => toggleFavorite(post)}
+              style={{
+                position: "absolute",
+                top: 12,
+                right: 12,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 20,
+                padding: 8,
+              }}
+            />
+          </View>
 
           <Text
             style={{
@@ -88,44 +110,6 @@ export default function PostDetailScreen() {
             {post.title}
           </Text>
 
-          <View
-            style={{
-              flexDirection: "row",
-              marginBottom: 16,
-              flexWrap: "wrap",
-              gap: 8,
-            }}
-          >
-            {post.category && (
-              <View
-                style={{
-                  backgroundColor: "#e3f2fd",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 16,
-                }}
-              >
-                <Text style={{ color: "#1976d2", fontSize: 12 }}>
-                  {post.category}
-                </Text>
-              </View>
-            )}
-            {post.status && (
-              <View
-                style={{
-                  backgroundColor: "#f3e5f5",
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 16,
-                }}
-              >
-                <Text style={{ color: "#7b1fa2", fontSize: 12 }}>
-                  {post.status}
-                </Text>
-              </View>
-            )}
-          </View>
-
           {post.publishedAt && (
             <Text
               style={{
@@ -134,7 +118,7 @@ export default function PostDetailScreen() {
                 marginBottom: 16,
               }}
             >
-              Published: {new Date(post.publishedAt).toLocaleDateString()}
+              Published: {formatDate(post.publishedAt)}
             </Text>
           )}
 
