@@ -8,9 +8,7 @@ export interface Post {
 
 export async function fetchPosts(): Promise<Post[]> {
   try {
-    const url = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
-
-    const response = await fetch(url);
+    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/posts`);
 
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.statusText}`);
@@ -26,12 +24,7 @@ export async function fetchPosts(): Promise<Post[]> {
 export async function fetchPostById(id: number): Promise<Post> {
   try {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      `${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`
     );
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.statusText}`);

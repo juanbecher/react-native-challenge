@@ -6,8 +6,10 @@ const AUTH_TOKEN_KEY = "user_token";
 interface AuthContextType {
   user: string | null;
   isLoading: boolean;
+  error: string | null;
   signIn: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadToken = async () => {
@@ -36,27 +39,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (username: string, password: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       await SecureStore.setItemAsync(AUTH_TOKEN_KEY, username);
       setUser(username);
     } catch (e) {
+      setError("Failed to sign in");
       console.error("Failed to sign in", e);
+      throw e;
     } finally {
       setIsLoading(false);
     }
   };
 
   const signOut = async () => {
+    setError(null);
     try {
       await SecureStore.deleteItemAsync(AUTH_TOKEN_KEY);
       setUser(null);
     } catch (e) {
+      setError("Failed to sign out");
       console.error("Failed to delete auth token", e);
     }
   };
 
+  const clearError = () => {
+    setError(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, error, signIn, signOut, clearError }}
+    >
       {children}
     </AuthContext.Provider>
   );

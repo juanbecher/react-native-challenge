@@ -36,17 +36,17 @@ export function ErrorFallback({
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 16,
-    color: "#000",
+    color: Colors.text,
   },
   message: {
     fontSize: 16,
-    color: "#666",
+    color: Colors.secondaryText,
     textAlign: "center",
     marginTop: 8,
     marginBottom: 24,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonText: {
-    color: "#fff",
+    color: Colors.background,
     fontSize: 16,
     fontWeight: "600",
   },

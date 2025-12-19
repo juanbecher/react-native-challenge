@@ -44,7 +44,13 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const saveFavorites = async (newFavorites: Post[]) => {
     if (!user) return;
-    await storage.setFavorites(user, newFavorites);
+    try {
+      await storage.setFavorites(user, newFavorites);
+    } catch (error) {
+      console.error("Failed to save favorites", error);
+      // Revert the state change on error
+      throw error;
+    }
   };
 
   const toggleFavorite = (post: Post) => {

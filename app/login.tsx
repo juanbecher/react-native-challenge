@@ -8,7 +8,7 @@ import { useAuth } from "../src/context/AuthContext";
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { user, signIn, isLoading } = useAuth();
+  const { user, signIn, isLoading, error, clearError } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +43,12 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
+        {error && (
+          <Text style={styles.errorText} onPress={clearError}>
+            {error}
+          </Text>
+        )}
+
         <View style={styles.buttonContainer}>
           <Button
             title={isLoading ? "Signing In..." : "Sign In"}
@@ -61,7 +67,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     justifyContent: "center",
     padding: 20,
   },
@@ -79,7 +85,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: Colors.secondaryText,
     marginBottom: 32,
     textAlign: "center",
   },
@@ -88,7 +94,13 @@ const styles = StyleSheet.create({
   },
   footerText: {
     marginTop: 24,
-    color: "#999",
+    color: Colors.secondaryText,
+    textAlign: "center",
+    fontSize: 14,
+  },
+  errorText: {
+    marginTop: 12,
+    color: Colors.error,
     textAlign: "center",
     fontSize: 14,
   },

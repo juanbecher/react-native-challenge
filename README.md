@@ -1,36 +1,46 @@
-# Welcome to your Expo app 👋
+# Conexa React Native Challenge
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Project Features
 
-## Get started
+1. **TanStack Query for Caching**: useQuery para posts y users con caching automático, evitando refetchs innesecarios.
 
-1. Install dependencies
+2. **Search functionality**: Search tuvo que ser implementado en el cliente, dado que la API no soporta filtering.
 
-   ```bash
-   npm install
-   ```
+   - Posts: por title o content.
+   - Users: por name o email.
+   - Search con debounce vía useDebounce
 
-2. Start the app
+3. **Favorites System**:
 
-   ```bash
-   npx expo start
-   ```
+   - Persistido con AsyncStorage.
+   - Guardamos el post completo porque el endpoint GET /posts/:id de JSONPlaceholder solo devuelve data válida para el post con ID 1, entonces si solo guardamos el postId después no podríamos reconstruir el contenido. En un entorno real lo ideal sería persistir únicamente el ID y pedir los datos al backend cuando sea necesario.
+   - Scoped por usuario (cada usuario tiene su lista independiente).
 
-In the output, you'll find options to open the app in a
+4. **Login Flow**:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   - Persistencia segura con expo-secure-store.
+   - Token actual = username (en un sistema real sería JWT)
+   - Protected routes usando Expo Router route groups (protected)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+5. **Error Handling**:
 
-## Get a fresh project
+   - react-error-boundary + ErrorFallback con retry.
 
-When you're ready, run:
+6. **UI/UX Optimization**:
 
-```bash
-npm run reset-project
-```
+   - Client-side pagination con onEndReached porque la API no soporta pagination.
+   - Imágenes placeholder de picsum.photos.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Design Decisions & Patterns
+
+- Atomic Components: UI components separados de business components.
+- Provider Pattern: Context para Auth y Favorites.
+- File-based Routing con Expo Router.
+
+## How to run the project
+
+1. **Prerequisites**: Ensure you have Node.js and npm installed.
+2. **Install dependencies**: `npm install`
+3. **Environment Variables**: Create a `.env` file or ensure `EXPO_PUBLIC_API_URL` is set to `https://jsonplaceholder.org`.
+4. **Start the app**: `npx expo start`
+5. **Testing**: Run `npm test` to execute unit tests.
