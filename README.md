@@ -41,7 +41,7 @@
 
 - Agregar Skeleton loading UI
 - Mejorar Handling de Formularios: Reemplazar el login actual por react-hook-form y agregar validaciones client-side básicas (email/password requeridos, formato válido, etc.).
-- Agregar sistema multi-idioma: Agregar soporte multi-idioma usando react-i18next
+- Agregar sistema multi-idioma usando react-i18next
 
 ## How to run the project
 
