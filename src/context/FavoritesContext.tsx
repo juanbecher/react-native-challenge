@@ -48,7 +48,6 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       await storage.setFavorites(user, newFavorites);
     } catch (error) {
       console.error("Failed to save favorites", error);
-      // Revert the state change on error
       throw error;
     }
   };
