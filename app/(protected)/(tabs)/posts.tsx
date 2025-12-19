@@ -1,10 +1,11 @@
-import { fetchPosts } from "@/src/api/post";
+import { fetchPosts } from "@/src/api/posts";
 import PostList from "@/src/components/posts/PostList";
 import TextInput from "@/src/components/ui/TextInput";
+import { Colors } from "@/src/constants/Colors";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PostsScreen() {
@@ -29,11 +30,8 @@ export default function PostsScreen() {
   }, [data, debouncedSearch]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <View style={{ marginBottom: 12 }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>News Feed</Text>
-        </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
         <TextInput
           value={search}
           onChangeText={setSearch}
@@ -48,3 +46,14 @@ export default function PostsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+});

@@ -1,8 +1,9 @@
 import { Link } from "expo-router";
-import { Image, Text, View } from "react-native";
-import { Post } from "../../api/post";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { Post } from "../../api/posts";
+import { Colors } from "../../constants/Colors";
 import { Config } from "../../constants/Config";
-import FavoriteButton from "../ui/FavoriteButton";
+import FavoriteButton from "../ui/buttons/FavoriteButton";
 
 interface PostCardProps {
   post: Post;
@@ -16,52 +17,58 @@ export default function PostCard({
   onToggleFavorite,
 }: PostCardProps) {
   return (
-    <View
-      style={{
-        borderRadius: 8,
-        borderWidth: 1,
-        marginBottom: 12,
-        borderColor: "#e0e0e0",
-        backgroundColor: "#fff",
-        overflow: "hidden",
-      }}
-    >
+    <View style={styles.container}>
       <Link
         href={{
           pathname: "/posts/[id]",
           params: { id: post.id.toString() },
         }}
       >
-        <View style={{ padding: 12 }}>
+        <View style={styles.content}>
           <Image
             source={{
               uri: `${Config.IMAGE_BASE_URL}/${post.id}/400/200`,
             }}
-            style={{
-              width: "100%",
-              height: 150,
-              borderRadius: 6,
-              marginBottom: 8,
-            }}
+            style={styles.image}
           />
-          <Text style={{ fontWeight: "bold", marginBottom: 4 }}>
-            {post.title}
+          <Text style={styles.title}>{post.title}</Text>
+          <Text style={styles.body} numberOfLines={2}>
+            {post.content}
           </Text>
-          <Text numberOfLines={2}>{post.content}</Text>
         </View>
       </Link>
       <FavoriteButton
         isFavorite={isFavorite}
         onPress={() => onToggleFavorite(post)}
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 20,
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          borderRadius: 20,
-          padding: 8,
-        }}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 12,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background,
+    overflow: "hidden",
+  },
+  content: {
+    padding: 12,
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 6,
+    marginBottom: 8,
+  },
+  title: {
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: Colors.text,
+  },
+  body: {
+    color: Colors.text,
+  },
+});

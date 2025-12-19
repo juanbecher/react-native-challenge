@@ -1,21 +1,17 @@
-export interface User {
+export interface Post {
   id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  birthDate: string;
-  login: {
-    uuid: string;
-    username: string;
-    password: string;
-    md5: string;
-    sha1: string;
-    registered: string;
-  };
+  title: string;
+  content: string;
+  publishedAt: string;
+  userId: number;
 }
-export async function fetchUsers(): Promise<User[]> {
+
+export async function fetchPosts(): Promise<Post[]> {
   try {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
+    const url = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
+
+    const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.statusText}`);
     }
@@ -27,10 +23,15 @@ export async function fetchUsers(): Promise<User[]> {
   }
 }
 
-export async function fetchUserById(id: number): Promise<User> {
+export async function fetchPostById(id: number): Promise<Post> {
   try {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/users/${id}`
+      `${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     if (!response.ok) {
       throw new Error(`Network response was not ok ${response.statusText}`);

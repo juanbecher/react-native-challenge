@@ -1,28 +1,24 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AuthProvider } from "../src/context/AuthContext";
 import { FavoritesProvider } from "../src/context/FavoritesContext";
-
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
 
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <FavoritesProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="post/[id]"
-            options={{
-              title: "Post Details",
-              headerShown: true,
-            }}
-          />
-        </Stack>
-      </FavoritesProvider>
+      <AuthProvider>
+        <SafeAreaProvider>
+          <FavoritesProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="login" />
+              <Stack.Screen name="(protected)" />
+            </Stack>
+          </FavoritesProvider>
+        </SafeAreaProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
